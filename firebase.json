@@ -1,0 +1,1 @@
+{"flutter":{"platforms":{"android":{"default":{"projectId":"unidwell-finder","appId":"1:602647315196:android:9d10878d906b6a7408cd79","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"unidwell-finder","configurations":{"android":"1:602647315196:android:9d10878d906b6a7408cd79","web":"1:602647315196:web:6d960a53679ec8b908cd79"}}}}}}

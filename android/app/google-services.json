@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "602647315196",
+    "project_id": "unidwell-finder",
+    "storage_bucket": "unidwell-finder.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:602647315196:android:9d10878d906b6a7408cd79",
+        "android_client_info": {
+          "package_name": "com.example.unidwell_finder"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDruOE8vCKC2OYEJBtlr0-8iRf5yszyXgg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
