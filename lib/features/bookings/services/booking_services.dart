@@ -11,4 +11,17 @@ class BookingServices{
   }
 
   static updateBooking(String? id, Map<String, String> map) {}
+
+  static String getId() {
+    return _bookings.doc().id;
+  }
+
+  static Future<bool> addBooking(BookingModel booking) async{
+    try{
+      await _bookings.doc(booking.id).set(booking.toMap());
+      return true;
+    }catch(e){
+      return false;
+    }
+  }
 }

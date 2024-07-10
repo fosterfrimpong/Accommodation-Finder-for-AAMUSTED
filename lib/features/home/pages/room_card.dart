@@ -5,6 +5,7 @@ import 'package:unidwell_finder/config/routes/router_item.dart';
 import 'package:unidwell_finder/core/views/custom_button.dart';
 import 'package:unidwell_finder/core/views/custom_dialog.dart';
 import 'package:unidwell_finder/features/auth/providers/user_provider.dart';
+import 'package:unidwell_finder/features/home/provider/booking_provider.dart';
 import 'package:unidwell_finder/features/rooms/data/rooms_model.dart';
 import 'package:unidwell_finder/rating/services/rating_services.dart';
 import 'package:unidwell_finder/utils/colors.dart';
@@ -44,11 +45,11 @@ class _RoomCardState extends ConsumerState<RoomCard> {
   Widget buildHorizontal() {
     var styles = Styles(context);
     var user = ref.watch(userProvider);
-    return InkWell(
-      onTap: () {
-        // Navigator.pushNamed(context, '/room/${widget.room.id}');
-      },
-      child: Container(
+    if (ref.watch(bookingProvider)!.room != null &&
+        ref.watch(bookingProvider)!.room!.id == widget.room.id) {
+      return buildBookingCover();
+    } else {
+      return Container(
         width: styles.width,
         decoration: BoxDecoration(
           color: primaryColor,
@@ -199,6 +200,9 @@ class _RoomCardState extends ConsumerState<RoomCard> {
                                       text: 'Book Now',
                                       onPressed: () {
                                         if (user.id.isNotEmpty) {
+                                          ref
+                                              .read(bookingProvider.notifier)
+                                              .setRoom(widget.room);
                                         } else {
                                           CustomDialogs.showDialog(
                                               message:
@@ -226,8 +230,8 @@ class _RoomCardState extends ConsumerState<RoomCard> {
             ),
           ],
         ),
-      ),
-    );
+      );
+    }
   }
 
   Future<double> getRating() async {
@@ -236,4 +240,192 @@ class _RoomCardState extends ConsumerState<RoomCard> {
         0.0, (previousValue, element) => previousValue + element.rating);
     return total / rating.length;
   }
+
+  Widget buildBookingCover() {
+    var styles = Styles(context);
+    return Container(
+      width: styles.width,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: secondaryColor,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              IconButton(
+                  onPressed: () {
+                    ref.read(bookingProvider.notifier).removeRoom();
+                  },
+                  icon: const Icon(Icons.cancel, color: Colors.white)),
+              const SizedBox(width: 10),
+              Text(
+                'Booking Room',
+                style: styles.title(color: Colors.white),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          //list of facilities and features
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: ListTile(
+                  title: Text(
+                    'Facilities',
+                    style: styles.subtitle(
+                        color: Colors.white, fontFamily: 'Ralway'),
+                  ),
+                  subtitle: Column(
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.king_bed,
+                              color: Colors.white, size: 20),
+                          const SizedBox(width: 3),
+                          Text(
+                            ' ${widget.room.bedType}',
+                            style: styles.body(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const Icon(Icons.bathtub,
+                              color: Colors.white, size: 20),
+                          const SizedBox(width: 3),
+                          Text(
+                            ' ${widget.room.bathroomType}',
+                            style: styles.body(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const Icon(Icons.kitchen,
+                              color: Colors.white, size: 20),
+                          const SizedBox(width: 3),
+                          Text(
+                            ' ${widget.room.kitchingType}',
+                            style: styles.body(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              //rules
+              Expanded(
+                child: ListTile(
+                  title: Text(
+                    'Rules',
+                    style: styles.subtitle(
+                        color: Colors.white, fontFamily: 'Ralway'),
+                  ),
+                  subtitle: Column(
+                    children: [
+                      for (var rule in widget.room.rules)
+                        Row(
+                          children: [
+                            const Icon(Icons.check,
+                                color: Colors.white, size: 20),
+                            const SizedBox(width: 3),
+                            Text(
+                              ' $rule',
+                              style: styles.body(color: Colors.white),
+                            ),
+                          ],
+                        )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 5),
+          Row(
+            children: [
+              const Icon(Icons.bedroom_parent, color: Colors.white, size: 20),
+              const SizedBox(width: 3),
+              Text('Available slots',
+                  style: styles.body(color: Colors.white60)),
+              Text(' ${widget.room.availableSpace} / ${widget.room.capacity}',
+                  style: styles.subtitle(color: Colors.white)),
+            ],
+          ),
+          const SizedBox(height: 10),
+          //textfield with minus and plus button
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                    onPressed: () {
+                      if (ref.watch(bookingProvider)!.spaces > 1) {
+                        ref.read(bookingProvider.notifier).decreaseSpace();
+                        //ref.read(isBooking).state = true;
+                      }
+                    },
+                    icon: const Icon(Icons.remove, color: primaryColor)),
+                const Spacer(),
+                Text(
+                  '${ref.watch(bookingProvider)!.spaces}',
+                  style: styles.title(color: primaryColor),
+                ),
+                const Spacer(),
+                IconButton(
+                    onPressed: () {
+                      if (ref.watch(bookingProvider)!.spaces <
+                          widget.room.capacity) {
+                        ref.read(bookingProvider.notifier).increaseSpace();
+                        //ref.read(isBooking).state = true;
+                      }
+                    },
+                    icon: const Icon(Icons.add, color: primaryColor)),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+              'Additional Cost: GHS ${widget.room.additionalCost.toStringAsFixed(2)}',
+              style: styles.body(color: Colors.white60)),
+          const SizedBox(height: 10),
+
+          CustomButton(
+              color: primaryColor,
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              text:
+                  'GHS ${ref.watch(bookingProvider)!.totalCost.toStringAsFixed(2)} Pay Now',
+              onPressed: () {
+                CustomDialogs.showDialog(
+                    message: 'Are you sure you want to book this room?',
+                    type: DialogType.warning,
+                    secondBtnText: 'Pay Now',
+                    onConfirm: () {
+                      ref.read(bookingProvider.notifier).book(ref, context);
+                    });
+              })
+        ],
+      ),
+    );
+  }
+
+  final selectedSpaces = StateProvider<int>((ref) => 1);
 }
