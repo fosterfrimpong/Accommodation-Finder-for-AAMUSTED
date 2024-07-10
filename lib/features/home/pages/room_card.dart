@@ -64,14 +64,19 @@ class _RoomCardState extends ConsumerState<RoomCard> {
         ),
         child: Column(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                widget.room.images[0],
-                fit: BoxFit.cover,
-                width: styles.width,
-                height: 200,
+            Container(
+              height: 200,
+              width: styles.width,
+              decoration: BoxDecoration(
+                color: primaryColor,
+                borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(
+                  image: NetworkImage(widget.room.images[0]),
+                  fit: BoxFit.cover,
+                ),
               ),
+             
+              
             ),
             Padding(
               padding: const EdgeInsets.all(10),

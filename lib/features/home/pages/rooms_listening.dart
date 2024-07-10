@@ -83,12 +83,14 @@ class _RoomsListPageState extends ConsumerState<RoomsListPage> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: styles.isMobile
+                  crossAxisCount: styles.width <= 700
                       ? 1
-                      : styles.isTablet
-                          ? 3
-                          : 4,
-                  childAspectRatio: 1,
+                      : styles.width > 700 && styles.width <= 1100
+                          ? 2
+                          : styles.width > 1100 && styles.width <= 1500
+                              ? 3
+                              : 4,
+                  childAspectRatio: styles.width <= 700 ? 1.2 : 0.9,
                   crossAxisSpacing: styles.isMobile
                       ? 10
                       : styles.isTablet
