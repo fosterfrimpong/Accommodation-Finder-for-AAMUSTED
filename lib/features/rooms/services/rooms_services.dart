@@ -33,4 +33,13 @@ static String getId (){
       return [];
     }
   }
+
+  static Future<bool> updateRoom(RoomsModel room) async{
+    try {
+      await _rooms.doc(room.id).update(room.toMap());
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

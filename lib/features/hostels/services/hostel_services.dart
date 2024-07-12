@@ -43,4 +43,13 @@ class HostelServices {
       return false;
     }
   }
+
+  static Future<List<HostelsModel>> getHostels() async{
+    try {
+      var data = await _hostels.get();
+      return data.docs.map((e) => HostelsModel.fromMap(e.data() as Map<String, dynamic>)).toList();
+    } catch (e) {
+      return [];
+    }
+  }
 }
