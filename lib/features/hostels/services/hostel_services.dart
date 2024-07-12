@@ -44,15 +44,12 @@ class HostelServices {
     }
   }
 
-  static Future<HostelsModel?>getHostel({required String id}) async{
+  static Future<List<HostelsModel>> getHostels() async{
     try {
-      var doc = await _hostels.doc(id).get();
-      if (doc.exists) {
-        return HostelsModel.fromMap(doc.data() as Map<String, dynamic>);
-      }
-      return null;
+      var data = await _hostels.get();
+      return data.docs.map((e) => HostelsModel.fromMap(e.data() as Map<String, dynamic>)).toList();
     } catch (e) {
-      return null;
+      return [];
     }
   }
 }

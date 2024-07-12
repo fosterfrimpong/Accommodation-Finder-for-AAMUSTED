@@ -60,6 +60,16 @@ class _HomePageState extends ConsumerState<HomePage> {
     //     await RatingServices.addRating(rating);
     //   }
     // }
-    
+
+    var rooms = await RoomsServices.getRooms();
+    var hostels = await HostelServices.getHostels();
+    //assign rooms to hostels
+    //randomly assign rooms hostel id to any hostel hostel
+    //after that update the rooms
+    for (var room in rooms) {
+      var hostel = hostels[faker.randomGenerator.integer(hostels.length - 1)];
+      room.hostelId = hostel.id;
+      await RoomsServices.updateRoom(room);
+    }
   });
 }
