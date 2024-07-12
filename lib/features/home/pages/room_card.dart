@@ -45,8 +45,9 @@ class _RoomCardState extends ConsumerState<RoomCard> {
   Widget buildHorizontal() {
     var styles = Styles(context);
     var user = ref.watch(userProvider);
-    if (ref.watch(bookingProvider)!.room != null &&
-        ref.watch(bookingProvider)!.room!.id == widget.room.id) {
+    var booking = ref.watch(bookingProvider);
+
+    if (booking != null && booking.room!.id == widget.room.id) {
       return buildBookingCover();
     } else {
       return Container(
@@ -192,31 +193,33 @@ class _RoomCardState extends ConsumerState<RoomCard> {
                                     ],
                                   ),
                                   const SizedBox(height: 5),
-                                  CustomButton(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 5),
-                                      text: 'Book Now',
-                                      onPressed: () {
-                                        if (user.id.isNotEmpty) {
-                                          ref
-                                              .read(bookingProvider.notifier)
-                                              .setRoom(widget.room);
-                                        } else {
-                                          CustomDialogs.showDialog(
-                                              message:
-                                                  'Please login to book room',
-                                              type: DialogType.warning,
-                                              secondBtnText: 'Login',
-                                              onConfirm: () {
-                                                CustomDialogs.dismiss();
-                                                MyRouter(
-                                                        context: context,
-                                                        ref: ref)
-                                                    .navigateToRoute(
-                                                        RouterItem.loginRoute);
-                                              });
-                                        }
-                                      })
+                                  if (widget.room.availableSpace > 0)
+                                    CustomButton(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 5),
+                                        text: 'Book Now',
+                                        onPressed: () {
+                                          if (user.id.isNotEmpty) {
+                                            ref
+                                                .read(bookingProvider.notifier)
+                                                .setRoom(widget.room);
+                                          } else {
+                                            CustomDialogs.showDialog(
+                                                message:
+                                                    'Please login to book room',
+                                                type: DialogType.warning,
+                                                secondBtnText: 'Login',
+                                                onConfirm: () {
+                                                  CustomDialogs.dismiss();
+                                                  MyRouter(
+                                                          context: context,
+                                                          ref: ref)
+                                                      .navigateToRoute(
+                                                          RouterItem
+                                                              .loginRoute);
+                                                });
+                                          }
+                                        })
                                 ],
                               );
                             });
@@ -227,17 +230,17 @@ class _RoomCardState extends ConsumerState<RoomCard> {
               ),
             ),
             //show room availability
-            if (widget.room.availableSpace> 0)
+            if (widget.room.availableSpace > 0)
               Text(
                 'Available Room: ${widget.room.availableSpace}/${widget.room.capacity}',
                 style:
                     styles.body(color: secondaryColor, desktop: 15, mobile: 13),
               )
-            // else
-            //   Text(
-            //     'Room is full',
-            //     style: styles.body(color: Colors.red, desktop: 14, mobile: 13),
-            //   )
+            else
+              Text(
+                'Room is full',
+                style: styles.body(color: Colors.red, desktop: 14, mobile: 13),
+              )
           ],
         ),
       );

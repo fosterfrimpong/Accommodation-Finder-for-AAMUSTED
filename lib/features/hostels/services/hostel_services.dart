@@ -52,4 +52,14 @@ class HostelServices {
       return [];
     }
   }
+
+  static Future<HostelsModel?>getHostel({required String id})async {
+    try {
+      var data = await _hostels.doc(id).get();
+      return HostelsModel.fromMap(data.data() as Map<String, dynamic>);
+    } catch (e) {
+      return null;
+    }
+    
+  }
 }

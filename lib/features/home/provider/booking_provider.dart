@@ -8,7 +8,6 @@ import 'package:unidwell_finder/core/views/custom_dialog.dart';
 import 'package:unidwell_finder/features/auth/providers/user_provider.dart';
 import 'package:unidwell_finder/features/bookings/data/booking_model.dart';
 import 'package:unidwell_finder/features/bookings/services/booking_services.dart';
-import 'package:unidwell_finder/features/dashboard/provider/main_provider.dart';
 import 'package:unidwell_finder/features/hostels/services/hostel_services.dart';
 
 import 'package:unidwell_finder/features/rooms/data/rooms_model.dart';
@@ -43,13 +42,10 @@ final bookingProvider = StateNotifierProvider<BookingProvider, BookingItem?>(
     (ref) => BookingProvider());
 
 class BookingProvider extends StateNotifier<BookingItem?> {
-  BookingProvider() : super(BookingItem(room: null, spaces: 0, totalCost: 0.0));
+  BookingProvider() : super(null);
 
   void setRoom(RoomsModel room) {
-    state = state!.copyWith(
-        room: () => room,
-        spaces: 1,
-        totalCost: room.price + room.additionalCost);
+    state = BookingItem(room: room, spaces: 1, totalCost: room.price);
   }
 
   void increaseSpace() {
@@ -65,7 +61,7 @@ class BookingProvider extends StateNotifier<BookingItem?> {
   }
 
   void removeRoom() {
-    state = state!.copyWith(room: null, spaces: 0, totalCost: 0.0);
+    state = null;
   }
 
   void book(WidgetRef ref, BuildContext context) async {
