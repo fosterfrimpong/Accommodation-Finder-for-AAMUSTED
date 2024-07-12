@@ -13,6 +13,7 @@ import 'package:unidwell_finder/utils/styles.dart';
 
 class RoomCard extends ConsumerStatefulWidget {
   const RoomCard(this.room, {super.key});
+
   final RoomsModel room;
 
   @override
@@ -20,27 +21,7 @@ class RoomCard extends ConsumerStatefulWidget {
 }
 
 class _RoomCardState extends ConsumerState<RoomCard> {
-  @override
-  Widget build(BuildContext context) {
-    var styles = Styles(context);
-
-    return Container(
-      width: styles.width,
-      decoration: BoxDecoration(
-        color: primaryColor,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: buildHorizontal(),
-    );
-  }
+  final selectedSpaces = StateProvider<int>((ref) => 1);
 
   Widget buildHorizontal() {
     var styles = Styles(context);
@@ -445,5 +426,25 @@ class _RoomCardState extends ConsumerState<RoomCard> {
     );
   }
 
-  final selectedSpaces = StateProvider<int>((ref) => 1);
+  @override
+  Widget build(BuildContext context) {
+    var styles = Styles(context);
+
+    return Container(
+      width: styles.width,
+      decoration: BoxDecoration(
+        color: primaryColor,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: buildHorizontal(),
+    );
+  }
 }
