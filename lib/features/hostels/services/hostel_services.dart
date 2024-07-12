@@ -43,4 +43,16 @@ class HostelServices {
       return false;
     }
   }
+
+  static Future<HostelsModel?>getHostel({required String id}) async{
+    try {
+      var doc = await _hostels.doc(id).get();
+      if (doc.exists) {
+        return HostelsModel.fromMap(doc.data() as Map<String, dynamic>);
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
 }

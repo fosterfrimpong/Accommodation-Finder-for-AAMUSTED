@@ -9,8 +9,10 @@ import 'package:unidwell_finder/features/auth/providers/user_provider.dart';
 import 'package:unidwell_finder/features/bookings/data/booking_model.dart';
 import 'package:unidwell_finder/features/bookings/services/booking_services.dart';
 import 'package:unidwell_finder/features/dashboard/provider/main_provider.dart';
+import 'package:unidwell_finder/features/hostels/services/hostel_services.dart';
 
 import 'package:unidwell_finder/features/rooms/data/rooms_model.dart';
+import 'package:unidwell_finder/features/rooms/services/rooms_services.dart';
 
 import '../../../core/functions/payment/paystack_integration.dart';
 
@@ -77,20 +79,18 @@ class BookingProvider extends StateNotifier<BookingItem?> {
     if (kIsWeb) {
       await PaystackPopup.openPaystackPopup(
         email: user.email,
-        amount: state!.totalCost.toInt(),
+        amount: int.parse(state!.totalCost.toStringAsFixed(0)),
         ref: reference,
         onClosed: () {
           CustomDialogs.dismiss();
           CustomDialogs.showDialog(
               message: 'Payment cancelled', type: DialogType.error);
         },
-        onSuccess: () {
+        onSuccess: () async {
           //create booking here
-          var hostel = ref
-              .read(hostelsFilterProvider)
-              .items
-              .where((element) => element.id == state!.room!.hostelId)
-              .firstOrNull;
+          var hostelId = state!.room!.hostelId;
+          print('HostelId: $hostelId');
+          var hostel = await HostelServices.getHostel(id: hostelId);
           if (hostel == null) {
             CustomDialogs.dismiss();
             CustomDialogs.showDialog(
@@ -110,7 +110,7 @@ class BookingProvider extends StateNotifier<BookingItem?> {
             studentPhone: user.phone,
             startDate: DateFormat('EEE,MMM dd,yyyy').format(DateTime.now()),
             endDate: DateFormat('EEE,MMM dd,yyyy')
-                .format(DateTime.now().add(Duration(days: 365))),
+                .format(DateTime.now().add(const Duration(days: 365))),
             totalCost: state!.totalCost,
             additionalCost: state!.room!.additionalCost,
             status: 'pending',
@@ -130,18 +130,20 @@ class BookingProvider extends StateNotifier<BookingItem?> {
             hostelLongitude: hostel.lng,
             createdAt: DateTime.now().millisecondsSinceEpoch,
           );
-          BookingServices.addBooking(booking).then((value) {
-            CustomDialogs.dismiss();
-            if (value) {
-              CustomDialogs.showDialog(
-                  message: 'Room booked successfully',
-                  type: DialogType.success);
-              state = state!.copyWith(room: null, spaces: 0, totalCost: 0.0);
-            } else {
-              CustomDialogs.showDialog(
-                  message: 'Failed to book room', type: DialogType.error);
-            }
-          });
+          var responds = await BookingServices.addBooking(booking);
+          //update room available slot
+          var room = state!.room!.copyWith(
+              availableSpace: state!.room!.availableSpace - state!.spaces);
+          await RoomsServices.updateRoom(room: room);
+          CustomDialogs.dismiss();
+          if (responds) {
+            CustomDialogs.showDialog(
+                message: 'Room booked successfully', type: DialogType.success);
+            state = state!.copyWith(room: null, spaces: 0, totalCost: 0.0);
+          } else {
+            CustomDialogs.showDialog(
+                message: 'Failed to book room', type: DialogType.error);
+          }
         },
       );
     } else {

@@ -76,8 +76,6 @@ class _RoomCardState extends ConsumerState<RoomCard> {
                   fit: BoxFit.cover,
                 ),
               ),
-             
-              
             ),
             Padding(
               padding: const EdgeInsets.all(10),
@@ -228,6 +226,18 @@ class _RoomCardState extends ConsumerState<RoomCard> {
                 ],
               ),
             ),
+            //show room availability
+            if (widget.room.availableSpace> 0)
+              Text(
+                'Available Room: ${widget.room.availableSpace}/${widget.room.capacity}',
+                style:
+                    styles.body(color: secondaryColor, desktop: 15, mobile: 13),
+              )
+            // else
+            //   Text(
+            //     'Room is full',
+            //     style: styles.body(color: Colors.red, desktop: 14, mobile: 13),
+            //   )
           ],
         ),
       );
@@ -325,7 +335,7 @@ class _RoomCardState extends ConsumerState<RoomCard> {
                   ),
                 ),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: 5),
               //rules
               Expanded(
                 child: ListTile(
@@ -342,9 +352,14 @@ class _RoomCardState extends ConsumerState<RoomCard> {
                             const Icon(Icons.check,
                                 color: Colors.white, size: 20),
                             const SizedBox(width: 3),
-                            Text(
-                              ' $rule',
-                              style: styles.body(color: Colors.white),
+                            Expanded(
+                              child: Text(
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                ' $rule',
+                                style: styles.body(
+                                    color: Colors.white, desktop: 15),
+                              ),
                             ),
                           ],
                         )
