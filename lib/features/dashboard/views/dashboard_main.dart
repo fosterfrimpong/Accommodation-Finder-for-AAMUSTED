@@ -15,7 +15,6 @@ import '../../main/components/app_bar_item.dart';
 class DashBoardMainPage extends ConsumerWidget {
   const DashBoardMainPage(this.child, {super.key});
   final Widget child;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var styles = Styles(context);
