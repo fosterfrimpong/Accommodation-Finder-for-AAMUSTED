@@ -495,4 +495,16 @@ class RoomsProvider extends StateNotifier<RoomsFilter> {
       state = state.copyWith(filteredList: filtered);
     }
   }
+   void filterRoomsByHostel(String value) {
+    if (value.isEmpty) {
+      state = RoomsFilter(items: state.items, filteredList: state.items);
+      return;
+    }
+    state = RoomsFilter(
+        items: state.items,
+        filteredList: state.items
+            .where((element) =>
+                element.hostelName.toLowerCase() == value.toLowerCase())
+            .toList());
+  }
 }

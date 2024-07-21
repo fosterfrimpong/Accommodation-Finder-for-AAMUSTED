@@ -2,11 +2,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unidwell_finder/features/rooms/data/rooms_model.dart';
 import 'package:unidwell_finder/features/rooms/services/rooms_services.dart';
 
+
 final roomsStreamProvider =
     StreamProvider.autoDispose<List<RoomsModel>>((ref) async* {
   final data = RoomsServices.getAllRooms();
   await for (final value in data) {
-    ref.read(roomsFilterProvider.notifier).setRooms(value);
+    ref.read(userRoomsFilterProvider.notifier).setRooms(value);
     yield value;
   }
 });
@@ -17,12 +18,12 @@ class RoomsFiterObject {
   RoomsFiterObject({this.items = const [], this.filteredItems = const []});
 }
 
-final roomsFilterProvider =
-    StateNotifierProvider<RoomsFilter, RoomsFiterObject>(
-        (ref) => RoomsFilter());
+final userRoomsFilterProvider =
+    StateNotifierProvider<UserRoomsFilter, RoomsFiterObject>(
+        (ref) => UserRoomsFilter());
 
-class RoomsFilter extends StateNotifier<RoomsFiterObject> {
-  RoomsFilter() : super(RoomsFiterObject());
+class UserRoomsFilter extends StateNotifier<RoomsFiterObject> {
+  UserRoomsFilter() : super(RoomsFiterObject());
 
   void filterRooms(String query) {
     state = RoomsFiterObject(
@@ -41,4 +42,4 @@ class RoomsFilter extends StateNotifier<RoomsFiterObject> {
 }
 
 
-final isSearchingProvider = StateProvider<bool>((ref) => false);
+final userIsSearchingProvider = StateProvider<bool>((ref) => false);

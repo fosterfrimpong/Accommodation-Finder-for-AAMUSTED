@@ -1,14 +1,7 @@
-import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:unidwell_finder/features/auth/data/user_model.dart';
-import 'package:unidwell_finder/features/auth/services/registration_services.dart';
-import 'package:unidwell_finder/features/institutions/data/institutions_model.dart';
-import 'package:unidwell_finder/features/institutions/services/institution_services.dart';
 import 'package:unidwell_finder/features/main/components/nav_bar.dart';
 
-import '../../hostels/data/hostels_model.dart';
-import '../../hostels/services/hostel_services.dart';
 
 class MainPage extends ConsumerWidget {
   const MainPage({super.key, required this.child});

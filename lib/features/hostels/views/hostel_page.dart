@@ -198,13 +198,20 @@ class _HostelPageState extends ConsumerState<HostelPage> {
                     ),
                   ),
                   DataCell(Text(hostelList[index].name, style: rowStyles)),
-                  DataCell(
-                      Text(hostelList[index].description, style: rowStyles)),
-                  DataCell(Text(hostelList[index].location, style: rowStyles)),
+                  DataCell(Text(hostelList[index].description,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: rowStyles)),
+                  DataCell(Text(hostelList[index].location,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: rowStyles)),
                   DataCell(
                       Text(hostelList[index].managerName, style: rowStyles)),
-                  DataCell(
-                      Text(hostelList[index].managerPhone, style: rowStyles)),
+                  DataCell(Text(hostelList[index].managerPhone,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: rowStyles)),
                   DataCell(Container(
                       width: 90,
                       // alignment: Alignment.center,
@@ -243,28 +250,32 @@ class _HostelPageState extends ConsumerState<HostelPage> {
                               ),
                               onPressed: () {
                                 CustomDialogs.showDialog(
-                                 message: 'Are you sure you want to block this hostel?',
-                                 secondBtnText: 'Block',
-                                 type: DialogType.warning,
+                                  message:
+                                      'Are you sure you want to block this hostel?',
+                                  secondBtnText: 'Block',
+                                  type: DialogType.warning,
                                   onConfirm: () {
-                                    ref.read(hostelsFilterProvider.notifier).changeHostelState(
-                                      hostelList[index],'closed'
-                                    );
+                                    ref
+                                        .read(hostelsFilterProvider.notifier)
+                                        .changeHostelState(
+                                            hostelList[index], 'closed');
                                   },
                                 );
                               },
                             )
-                          else if(hostelList[index].status == 'closed')
+                          else if (hostelList[index].status == 'closed')
                             IconButton(
                                 onPressed: () {
                                   CustomDialogs.showDialog(
-                                    message: 'Are you sure you want to unblock this hostel?',
+                                    message:
+                                        'Are you sure you want to unblock this hostel?',
                                     secondBtnText: 'Unblock',
                                     type: DialogType.warning,
                                     onConfirm: () {
-                                      ref.read(hostelsFilterProvider.notifier).changeHostelState(
-                                        hostelList[index],'opened'
-                                      );
+                                      ref
+                                          .read(hostelsFilterProvider.notifier)
+                                          .changeHostelState(
+                                              hostelList[index], 'opened');
                                     },
                                   );
                                 },

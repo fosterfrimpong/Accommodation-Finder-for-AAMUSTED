@@ -78,6 +78,7 @@ class MyRouter {
                 },
                 redirect: (context, state) {
                   var userInfo = ref.watch(userProvider);
+                  
                   if (userInfo.id.isEmpty) {
                     return RouterItem.loginRoute.path;
                   }

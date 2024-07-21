@@ -4,7 +4,7 @@ import 'package:unidwell_finder/features/home/pages/room_card.dart';
 import 'package:unidwell_finder/utils/colors.dart';
 import 'package:unidwell_finder/utils/styles.dart';
 import '../../../core/views/custom_input.dart';
-import '../provider/rooms_provider.dart';
+import '../provider/user_rooms_provider.dart';
 
 class RoomsListPage extends ConsumerStatefulWidget {
   const RoomsListPage({super.key});
@@ -28,7 +28,7 @@ class _RoomsListPageState extends ConsumerState<RoomsListPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               if ((styles.smallerThanTablet &&
-                      !ref.watch(isSearchingProvider)) ||
+                      !ref.watch(userIsSearchingProvider)) ||
                   !styles.smallerThanTablet)
                 Text(
                   'Available Rooms',
@@ -36,11 +36,11 @@ class _RoomsListPageState extends ConsumerState<RoomsListPage> {
                       color: primaryColor, desktop: 26, tablet: 22, mobile: 18),
                 ),
               // if ((styles.smallerThanTablet &&
-              //         !ref.watch(isSearchingProvider)) ||
+              //         !ref.watch(userIsSearchingProvider)) ||
               //     !styles.smallerThanTablet)
               const Spacer(),
               if ((styles.smallerThanTablet &&
-                      ref.watch(isSearchingProvider)) ||
+                      ref.watch(userIsSearchingProvider)) ||
                   !styles.smallerThanTablet)
                 SizedBox(
                     width: styles.isMobile
@@ -52,7 +52,7 @@ class _RoomsListPageState extends ConsumerState<RoomsListPage> {
                       hintText: 'Search a room',
                       onChanged: (value) {
                         ref
-                            .read(roomsFilterProvider.notifier)
+                            .read(userRoomsFilterProvider.notifier)
                             .filterRooms(value);
                       },
                     )),
@@ -63,10 +63,10 @@ class _RoomsListPageState extends ConsumerState<RoomsListPage> {
                       foregroundColor: WidgetStateProperty.all(Colors.white),
                       backgroundColor: WidgetStateProperty.all(primaryColor)),
                   onPressed: () {
-                    ref.read(isSearchingProvider.notifier).state =
-                        !ref.watch(isSearchingProvider);
+                    ref.read(userIsSearchingProvider.notifier).state =
+                        !ref.watch(userIsSearchingProvider);
                   },
-                  icon: Icon(ref.watch(isSearchingProvider)
+                  icon: Icon(ref.watch(userIsSearchingProvider)
                       ? Icons.cancel
                       : Icons.search),
                 ),
@@ -74,7 +74,7 @@ class _RoomsListPageState extends ConsumerState<RoomsListPage> {
           ),
           const SizedBox(height: 20),
           roomsStream.when(data: (data) {
-            var data = ref.watch(roomsFilterProvider);
+            var data = ref.watch(userRoomsFilterProvider);
             if (data.filteredItems.isEmpty) {
               return const SizedBox(
                   height: 200, child: Center(child: Text('No Rooms found ')));
@@ -120,4 +120,6 @@ class _RoomsListPageState extends ConsumerState<RoomsListPage> {
       ),
     );
   }
+
+  
 }

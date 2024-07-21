@@ -22,7 +22,7 @@ List<String> bedTypeList = [
 
 List<String> roomTypeList = [
   'self-contained',
-  '1 in a room'
+  '1 in a room',
       '2 in a room',
   '3 in a room',
   '4 in a room',
