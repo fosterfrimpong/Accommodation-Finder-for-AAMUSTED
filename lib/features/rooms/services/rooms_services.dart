@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:unidwell_finder/features/rooms/data/rooms_model.dart';
@@ -43,6 +45,21 @@ class RoomsServices {
       return true;
     } catch (error) {
       return false;
+    }
+  }
+
+  static Future<List<String>>uploadRoomImages(List<Uint8List> images, String id)async {
+    try {
+      List<String> imageUrls = [];
+      for (var i = 0; i < images.length; i++) {
+        var ref = _storage.ref('rooms/$id/$i.jpg');
+        await ref.putData(images[i]);
+        var url = await ref.getDownloadURL();
+        imageUrls.add(url);
+      }
+      return imageUrls;
+    } catch (e) {
+      return [];
     }
   }
 }

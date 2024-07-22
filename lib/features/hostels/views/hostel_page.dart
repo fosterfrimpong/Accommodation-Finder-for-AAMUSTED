@@ -7,9 +7,11 @@ import 'package:unidwell_finder/features/dashboard/provider/main_provider.dart';
 import 'package:unidwell_finder/utils/colors.dart';
 import 'package:unidwell_finder/utils/styles.dart';
 
+import '../../../core/functions/transparent_page.dart';
 import '../../../core/views/custom_input.dart';
 import '../../auth/providers/user_provider.dart';
 import '../provider/hostel_provider.dart';
+import 'new_hostel.dart';
 
 class HostelPage extends ConsumerStatefulWidget {
   const HostelPage({super.key});
@@ -26,12 +28,9 @@ class _HostelPageState extends ConsumerState<HostelPage> {
       width: double.infinity,
       padding: const EdgeInsets.all(10),
       child: () {
-        if (ref.watch(isNewHostel) &&
-            ref.watch(userProvider).role == 'manager') {
-          return buildNewHostel();
-        } else {
+       
           return buildHostelsList();
-        }
+        
       }(),
     );
   }
@@ -92,7 +91,7 @@ class _HostelPageState extends ConsumerState<HostelPage> {
               ),
             if ((styles.largerThanMobile ||
                     (styles.isMobile && !ref.watch(isSearchingHostel))) &&
-                user.role == 'manager')
+                user.role != 'manager')
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CustomButton(
@@ -104,7 +103,10 @@ class _HostelPageState extends ConsumerState<HostelPage> {
                     color: primaryColor,
                   ),
                   onPressed: () {
-                    ref.read(isNewHostel.notifier).state = true;
+                    Navigator.of(context).push(TransparentRoute(
+                        builder: (BuildContext context) =>
+                            const NewHostel()));
+                
                   },
                 ),
               )
@@ -295,30 +297,4 @@ class _HostelPageState extends ConsumerState<HostelPage> {
     );
   }
 
-  Widget buildNewHostel() {
-    var styles = Styles(context);
-    return Column(
-      children: [
-        Row(
-          children: [
-            IconButton(
-              icon: const Icon(Icons.cancel),
-              onPressed: () {
-                ref.read(isNewHostel.notifier).state = false;
-              },
-            ),
-            const SizedBox(width: 10),
-            Text(
-              'New Hostel'.toUpperCase(),
-              style: styles.title(
-                  color: primaryColor,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Raleway'),
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-      ],
-    );
   }
-}

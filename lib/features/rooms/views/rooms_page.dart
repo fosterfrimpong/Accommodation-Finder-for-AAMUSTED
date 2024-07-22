@@ -28,9 +28,9 @@ class _RoomsPageState extends ConsumerState<RoomsPage> {
       width: double.infinity,
       padding: const EdgeInsets.all(10),
       child: () {
-        // if (user.role == 'admin') {
-        //   return buildAdminList();
-        // }
+        if (user.role == 'admin') {
+          return buildAdminList();
+        }
         return buildManagerList();
         }(),
     );

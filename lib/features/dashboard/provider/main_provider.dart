@@ -271,19 +271,23 @@ final allBookingsProvider = StateProvider<List<BookingModel>>((ref) {
 final bookingFilterProvider = StateNotifierProvider.family<
     BookingsFilterProvider, BookingsFilter, String?>((ref, id) {
   var data = ref.watch(allBookingsProvider);
+  var user = ref.watch(userProvider);
   if (id != null && id.isNotEmpty) {
     var items = data
         .where((element) => element.studentId == id || element.managerId == id)
         .toList();
-    return BookingsFilterProvider()..setItems(items);
+    return BookingsFilterProvider()..setItems(items,user);
   }
-  return BookingsFilterProvider()..setItems(data);
+  return BookingsFilterProvider()..setItems(data,user);
 });
 
 class BookingsFilterProvider extends StateNotifier<BookingsFilter> {
   BookingsFilterProvider() : super(BookingsFilter(items: []));
 
-  void setItems(List<BookingModel> items) async {
+  void setItems(List<BookingModel> items, UserModel user) async {
+    if (user.role == 'manager') {
+      items = items.where((element) => element.managerId == user.id).toList();
+    }
     state = state.copyWith(items: items, filter: items);
   }
 
@@ -478,6 +482,8 @@ final roomsFilterProvider =
 class RoomsProvider extends StateNotifier<RoomsFilter> {
   RoomsProvider() : super(RoomsFilter(items: [], filteredList: []));
   void setItems(List<RoomsModel> items, UserModel user) {
+    //order items by date
+    items.sort((a, b) =>b.createdAt!=null&&a.createdAt!=null? b.createdAt!.compareTo(a.createdAt!):0);
     if (user.role == 'manager') {
       items = items.where((element) => element.managerId == user.id).toList();
     }
