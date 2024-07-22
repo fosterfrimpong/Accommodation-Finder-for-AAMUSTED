@@ -16,22 +16,24 @@ class HostelsModel {
   String managerPhone;
   String managerEmail;
   String school;
+  String schoolId;
   String status;
   int? createdAt;
   HostelsModel({
     required this.id,
-     this.name='',
-     this.location='',
-     this.description='',
-     this.images=const [],
-     this.lat =0,
-     this.lng =0,
-     this.managerId ='',
-     this.managerName='',
-     this.managerPhone='',
-     this.managerEmail='',
-     this.school='',
-     this.status='opened',
+    this.name = '',
+    this.location = '',
+    this.description = '',
+    this.images = const [],
+    this.lat = 0,
+    this.lng = 0,
+    this.managerId = '',
+    this.managerName = '',
+    this.managerPhone = '',
+    this.managerEmail = '',
+    this.school = '',
+    this.schoolId = '',
+    this.status = 'opened',
     this.createdAt,
   });
 
@@ -48,6 +50,7 @@ class HostelsModel {
     String? managerPhone,
     String? managerEmail,
     String? school,
+    String? schoolId,
     String? status,
     ValueGetter<int?>? createdAt,
   }) {
@@ -64,6 +67,7 @@ class HostelsModel {
       managerPhone: managerPhone ?? this.managerPhone,
       managerEmail: managerEmail ?? this.managerEmail,
       school: school ?? this.school,
+      schoolId: schoolId ?? this.schoolId,
       status: status ?? this.status,
       createdAt: createdAt != null ? createdAt() : this.createdAt,
     );
@@ -83,6 +87,7 @@ class HostelsModel {
       'managerPhone': managerPhone,
       'managerEmail': managerEmail,
       'school': school,
+      'schoolId': schoolId,
       'status': status,
       'createdAt': createdAt,
     };
@@ -102,6 +107,7 @@ class HostelsModel {
       managerPhone: map['managerPhone'] ?? '',
       managerEmail: map['managerEmail'] ?? '',
       school: map['school'] ?? '',
+      schoolId: map['schoolId'] ?? '',
       status: map['status'] ?? '',
       createdAt: map['createdAt']?.toInt(),
     );

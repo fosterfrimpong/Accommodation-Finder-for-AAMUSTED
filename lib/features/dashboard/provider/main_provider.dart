@@ -7,11 +7,22 @@ import 'package:unidwell_finder/features/auth/services/registration_services.dar
 import 'package:unidwell_finder/features/bookings/data/booking_model.dart';
 import 'package:unidwell_finder/features/hostels/data/hostels_model.dart';
 import 'package:unidwell_finder/features/hostels/services/hostel_services.dart';
+import 'package:unidwell_finder/features/institutions/data/institutions_model.dart';
+import 'package:unidwell_finder/features/institutions/provider/institution_provider.dart';
+import 'package:unidwell_finder/features/institutions/services/institution_services.dart';
 import 'package:unidwell_finder/features/rooms/data/rooms_model.dart';
 import 'package:unidwell_finder/features/rooms/services/rooms_services.dart';
 
 import '../../bookings/services/booking_services.dart';
 
+final instituionStream =
+    StreamProvider.autoDispose<List<InstitutionsModel>>((ref) async* {
+  var institutions = InstitutionServices.getInstitutions();
+  await for (var institution in institutions) {
+    ref.read(institutionsProvider.notifier).setItems(institution);
+    yield institution;
+  }
+});
 final adminManagersStream = StreamProvider<List<UserModel>>((ref) async* {
   var data = RegistrationServices.getmanagers();
   await for (var item in data) {
@@ -108,9 +119,7 @@ class ManagerFilterProvider extends StateNotifier<ManagerFilter> {
     CustomDialogs.dismiss();
     if (data) {
       state = state.copyWith(
-          items: state.items
-              .map((e) => e.id == user.id ? user : e)
-              .toList(),
+          items: state.items.map((e) => e.id == user.id ? user : e).toList(),
           filteredList: state.filteredList
               .map((e) => e.id == user.id ? user : e)
               .toList());
@@ -119,8 +128,7 @@ class ManagerFilterProvider extends StateNotifier<ManagerFilter> {
           type: DialogType.success);
     } else {
       CustomDialogs.toast(
-          message: 'Failed to Update Manager Status',
-          type: DialogType.error);
+          message: 'Failed to Update Manager Status', type: DialogType.error);
     }
   }
 }
@@ -210,7 +218,7 @@ class StudentsFilterProvider extends StateNotifier<StudentsFilter> {
     }
   }
 
-  void changeStatus(UserModel student, String s)async {
+  void changeStatus(UserModel student, String s) async {
     CustomDialogs.dismiss();
     CustomDialogs.loading(message: 'Updating Student Status');
     student = student.copyWith(status: s);
@@ -218,9 +226,8 @@ class StudentsFilterProvider extends StateNotifier<StudentsFilter> {
     CustomDialogs.dismiss();
     if (data) {
       state = state.copyWith(
-          items: state.items
-              .map((e) => e.id == student.id ? student : e)
-              .toList(),
+          items:
+              state.items.map((e) => e.id == student.id ? student : e).toList(),
           filteredList: state.filteredList
               .map((e) => e.id == student.id ? student : e)
               .toList());
@@ -229,8 +236,7 @@ class StudentsFilterProvider extends StateNotifier<StudentsFilter> {
           type: DialogType.success);
     } else {
       CustomDialogs.toast(
-          message: 'Failed to Update Student Status',
-          type: DialogType.error);
+          message: 'Failed to Update Student Status', type: DialogType.error);
     }
   }
 }
@@ -276,9 +282,9 @@ final bookingFilterProvider = StateNotifierProvider.family<
     var items = data
         .where((element) => element.studentId == id || element.managerId == id)
         .toList();
-    return BookingsFilterProvider()..setItems(items,user);
+    return BookingsFilterProvider()..setItems(items, user);
   }
-  return BookingsFilterProvider()..setItems(data,user);
+  return BookingsFilterProvider()..setItems(data, user);
 });
 
 class BookingsFilterProvider extends StateNotifier<BookingsFilter> {
@@ -421,7 +427,7 @@ class HostelsProvider extends StateNotifier<HostelsFilter> {
     }
   }
 
-  void changeHostelState(HostelsModel hostelList, String s)async {
+  void changeHostelState(HostelsModel hostelList, String s) async {
     CustomDialogs.dismiss();
     CustomDialogs.loading(message: 'Updating Hostel Status');
     hostelList = hostelList.copyWith(status: s);
@@ -440,8 +446,38 @@ class HostelsProvider extends StateNotifier<HostelsFilter> {
           type: DialogType.success);
     } else {
       CustomDialogs.toast(
-          message: 'Failed to Update Hostel Status',
-          type: DialogType.error);
+          message: 'Failed to Update Hostel Status', type: DialogType.error);
+    }
+  }
+
+  void deleteHostel(HostelsModel hostelList, WidgetRef ref) async {
+    CustomDialogs.dismiss();
+    CustomDialogs.loading(message: 'Deleting Hostel');
+    //check if hostel is not booked before deleting
+    var bookings = ref.watch(allBookingsProvider);
+    var isBooked = bookings.any((element) => element.hostelId == hostelList.id);
+    if (isBooked) {
+      CustomDialogs.dismiss();
+      CustomDialogs.toast(
+          message: 'Hostel is already booked', type: DialogType.error);
+      return;
+    }
+    var data = await HostelServices.deleteHostel(hostelList.id);
+    if (data) {
+      state = state.copyWith(
+          items: state.items
+              .where((element) => element.id != hostelList.id)
+              .toList(),
+          filteredList: state.filteredList
+              .where((element) => element.id != hostelList.id)
+              .toList());
+      CustomDialogs.dismiss();
+      CustomDialogs.toast(
+          message: 'Hostel Deleted Successfully', type: DialogType.success);
+    } else {
+      CustomDialogs.dismiss();
+      CustomDialogs.toast(
+          message: 'Failed to Delete Hostel', type: DialogType.error);
     }
   }
 }
@@ -483,7 +519,9 @@ class RoomsProvider extends StateNotifier<RoomsFilter> {
   RoomsProvider() : super(RoomsFilter(items: [], filteredList: []));
   void setItems(List<RoomsModel> items, UserModel user) {
     //order items by date
-    items.sort((a, b) =>b.createdAt!=null&&a.createdAt!=null? b.createdAt!.compareTo(a.createdAt!):0);
+    items.sort((a, b) => b.createdAt != null && a.createdAt != null
+        ? b.createdAt!.compareTo(a.createdAt!)
+        : 0);
     if (user.role == 'manager') {
       items = items.where((element) => element.managerId == user.id).toList();
     }
@@ -501,7 +539,8 @@ class RoomsProvider extends StateNotifier<RoomsFilter> {
       state = state.copyWith(filteredList: filtered);
     }
   }
-   void filterRoomsByHostel(String value) {
+
+  void filterRoomsByHostel(String value) {
     if (value.isEmpty) {
       state = RoomsFilter(items: state.items, filteredList: state.items);
       return;
@@ -512,5 +551,34 @@ class RoomsProvider extends StateNotifier<RoomsFilter> {
             .where((element) =>
                 element.hostelName.toLowerCase() == value.toLowerCase())
             .toList());
+  }
+
+  void deleteRoom(RoomsModel room, WidgetRef ref) async {
+    CustomDialogs.dismiss();
+    CustomDialogs.loading(message: 'Deleting Room');
+    //check if room is not booked before deleting
+    var bookings = ref.watch(allBookingsProvider);
+    var isBooked = bookings.any((element) => element.roomId == room.id);
+    if (isBooked) {
+      CustomDialogs.dismiss();
+      CustomDialogs.toast(
+          message: 'Room is already booked', type: DialogType.error);
+      return;
+    }
+    var data = await RoomsServices.deleteRoom(room.id);
+    if (data) {
+      state = state.copyWith(
+          items: state.items.where((element) => element.id != room.id).toList(),
+          filteredList: state.filteredList
+              .where((element) => element.id != room.id)
+              .toList());
+      CustomDialogs.dismiss();
+      CustomDialogs.toast(
+          message: 'Room Deleted Successfully', type: DialogType.success);
+    } else {
+      CustomDialogs.dismiss();
+      CustomDialogs.toast(
+          message: 'Failed to Delete Room', type: DialogType.error);
+    }
   }
 }

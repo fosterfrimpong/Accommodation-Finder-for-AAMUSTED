@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unidwell_finder/config/routes/router.dart';
 import 'package:unidwell_finder/config/routes/router_item.dart';
+import 'package:unidwell_finder/core/functions/view_on_map.dart';
 import 'package:unidwell_finder/core/views/custom_button.dart';
 import 'package:unidwell_finder/core/views/custom_dialog.dart';
 import 'package:unidwell_finder/features/auth/providers/user_provider.dart';
@@ -32,7 +33,6 @@ class _RoomCardState extends ConsumerState<RoomCard> {
       return buildBookingCover();
     } else {
       return Container(
-        width: styles.width,
         decoration: BoxDecoration(
           color: primaryColor,
           borderRadius: BorderRadius.circular(10),
@@ -49,7 +49,11 @@ class _RoomCardState extends ConsumerState<RoomCard> {
           children: [
             Container(
               height: 200,
-              width: styles.width,
+               width: styles.isMobile
+                  ? styles.width * .85
+                  : styles.isTablet
+                      ? styles.width * .4
+                      : styles.width * .3,
               decoration: BoxDecoration(
                 color: primaryColor,
                 borderRadius: BorderRadius.circular(10),
@@ -200,11 +204,31 @@ class _RoomCardState extends ConsumerState<RoomCard> {
                                                               .loginRoute);
                                                 });
                                           }
-                                        })
+                                        }),
+                                
+                                const SizedBox(height: 5),
+                                TextButton(
+                                  style: ButtonStyle(
+                                    foregroundColor: WidgetStateProperty.all(Colors.white),
+                                    padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 10, vertical: 5))
+                                  ),
+                                  onPressed: (){
+                                    if(widget.room.lat != null && widget.room.lng != null) {
+                                      openMap(widget.room.lat!, widget.room.lng!);
+                                    }else{
+                                      CustomDialogs.toast(
+                                        message: 'Location not available',
+                                        type: DialogType.error
+                                      );
+                                    }
+
+                                }, child: const Text('View on Map'))
                                 ],
                               );
                             });
                       }())
+                   
+                   
                     ],
                   )
                 ],
@@ -221,7 +245,8 @@ class _RoomCardState extends ConsumerState<RoomCard> {
               Text(
                 'Room is full',
                 style: styles.body(color: Colors.red, desktop: 14, mobile: 13),
-              )
+              ),
+              const SizedBox(height: 10),
           ],
         ),
       );
@@ -230,6 +255,7 @@ class _RoomCardState extends ConsumerState<RoomCard> {
 
   Future<double> getRating() async {
     var rating = await RatingServices.getRoomRating(widget.room.id);
+    if(rating.isEmpty) return 0.0;
     var total = rating.fold(
         0.0, (previousValue, element) => previousValue + element.rating);
     return total / rating.length;
@@ -238,7 +264,11 @@ class _RoomCardState extends ConsumerState<RoomCard> {
   Widget buildBookingCover() {
     var styles = Styles(context);
     return Container(
-      width: styles.width,
+       width: styles.isMobile
+          ? styles.width * .85
+          : styles.isTablet
+              ? styles.width * .4
+              : styles.width * .3,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: secondaryColor,
@@ -431,7 +461,11 @@ class _RoomCardState extends ConsumerState<RoomCard> {
     var styles = Styles(context);
 
     return Container(
-      width: styles.width,
+      width: styles.isMobile
+          ? styles.width * .85
+          : styles.isTablet
+              ? styles.width * .4
+              : styles.width * .3,
       decoration: BoxDecoration(
         color: primaryColor,
         borderRadius: BorderRadius.circular(10),

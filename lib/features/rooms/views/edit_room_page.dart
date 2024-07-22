@@ -1,31 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:unidwell_finder/core/views/custom_button.dart';
-import 'package:unidwell_finder/core/views/custom_drop_down.dart';
-import 'package:unidwell_finder/core/views/custom_input.dart';
 import 'package:unidwell_finder/features/dashboard/provider/main_provider.dart';
-import 'package:unidwell_finder/utils/colors.dart';
+import 'package:unidwell_finder/features/rooms/data/rooms_model.dart';
+import 'package:unidwell_finder/features/rooms/provider/room_provider.dart';
 import 'package:unidwell_finder/utils/styles.dart';
 import '../../../core/constatnts/options_list.dart';
-import '../provider/room_provider.dart';
+import '../../../core/views/custom_button.dart';
+import '../../../core/views/custom_drop_down.dart';
+import '../../../core/views/custom_input.dart';
+import '../../../utils/colors.dart';
 
-class NewRoomPage extends ConsumerStatefulWidget {
-  const NewRoomPage({super.key});
+class EditRoom extends ConsumerStatefulWidget {
+  const EditRoom({super.key, required this.room});
+  final RoomsModel room;
 
   @override
-  ConsumerState<NewRoomPage> createState() => _NewRoomPageState();
+  ConsumerState<EditRoom> createState() => _EditRoomState();
 }
 
-class _NewRoomPageState extends ConsumerState<NewRoomPage> {
+class _EditRoomState extends ConsumerState<EditRoom> {
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     var styles = Styles(context);
-    var notifier = ref.read(newRoomProvider.notifier);
+    var notifier = ref.read(editRoomProvider.notifier);
     var myHostels = ref.watch(hostelsFilterProvider).items;
     var hostelNames = myHostels.map((e) => e.name).toList();
     var images = ref.watch(roomImagesProvider);
+    //check if the widget is build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifier.setRoom(widget.room);
+    });
+    var provider = ref.watch(editRoomProvider);
     return Scaffold(
         backgroundColor: Colors.transparent,
         body: Center(
@@ -40,7 +47,7 @@ class _NewRoomPageState extends ConsumerState<NewRoomPage> {
                     : styles.isTablet
                         ? styles.width * 0.55
                         : styles.width * 0.45,
-                height: styles.height*.9,
+                height: styles.height * .9,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
@@ -79,31 +86,25 @@ class _NewRoomPageState extends ConsumerState<NewRoomPage> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 CustomDropDown(
-                                    items: hostelNames
-                                        .map((e) => DropdownMenuItem(
-                                            value: e, child: Text(e)))
-                                        .toList(),
-                                    label: 'Hostel',
-                                    validator: (hostel){
-                                      if (hostel == null || hostel.isEmpty) {
-                                        return 'Hostel is required';
-                                      }
-                                      return null;
-                                    
-                                    },
-                                    onChanged: (value) {
-                                      var hostel = myHostels
-                                          .where((element) =>
-                                              element.name == value)
-                                          .firstOrNull;
-                                      if (hostel != null) {
-                                        notifier.setHostel(hostel);
-                                      }
-                                    }),
+                                  items: hostelNames
+                                      .map((e) => DropdownMenuItem(
+                                          value: e, child: Text(e)))
+                                      .toList(),
+                                  label: 'Hostel',
+                                  hintText: 'Select Hostel',
+                                  value: provider.hostelName,
+                                  validator: (hostel) {
+                                    if (hostel == null || hostel.isEmpty) {
+                                      return 'Hostel is required';
+                                    }
+                                    return null;
+                                  },
+                                ),
                                 const SizedBox(height: 22),
                                 CustomTextFields(
                                   label: 'Listening Title',
                                   hintText: 'Enter Room Title',
+                                  initialValue: widget.room.title,
                                   validator: (title) {
                                     if (title == null || title.isEmpty) {
                                       return 'Title is required';
@@ -119,6 +120,7 @@ class _NewRoomPageState extends ConsumerState<NewRoomPage> {
                                   label: 'Listening Description',
                                   hintText: 'Enter Room Description',
                                   maxLines: 3,
+                                  initialValue: widget.room.description,
                                   validator: (description) {
                                     if (description == null ||
                                         description.isEmpty) {
@@ -137,7 +139,8 @@ class _NewRoomPageState extends ConsumerState<NewRoomPage> {
                                       child: CustomTextFields(
                                         label: 'Room Capacity',
                                         hintText: 'Enter Room Capacity',
-                                        
+                                        initialValue:
+                                            widget.room.capacity.toString(),
                                         isDigitOnly: true,
                                         max: 2,
                                         validator: (capacity) {
@@ -155,9 +158,10 @@ class _NewRoomPageState extends ConsumerState<NewRoomPage> {
                                     const SizedBox(width: 10),
                                     Expanded(
                                       child: CustomTextFields(
-                                        label: 'Room Price',
+                                        label: 'Room Price(GHS)',
                                         hintText: 'Enter Room Price',
                                         isDigitOnly: true,
+                                        initialValue: widget.room.price.toString(),
                                         validator: (price) {
                                           if (price == null || price.isEmpty) {
                                             return 'Price is required';
@@ -181,6 +185,7 @@ class _NewRoomPageState extends ConsumerState<NewRoomPage> {
                                                   value: e, child: Text(e)))
                                               .toList(),
                                           label: 'Room Type',
+                                          value: provider.roomType,
                                           hintText: 'Select Room Type',
                                           validator: (value) {
                                             if (value == null ||
@@ -202,6 +207,7 @@ class _NewRoomPageState extends ConsumerState<NewRoomPage> {
                                               .toList(),
                                           label: 'Bed Type',
                                           hintText: 'Select Bed Type',
+                                          value: provider.bedType,
                                           validator: (value) {
                                             if (value == null ||
                                                 value.isEmpty) {
@@ -226,6 +232,7 @@ class _NewRoomPageState extends ConsumerState<NewRoomPage> {
                                               .toList(),
                                           label: 'Bathroom Type',
                                           hintText: 'Select Bathroom Type',
+                                          value: provider.bathroomType,
                                           validator: (value) {
                                             if (value == null ||
                                                 value.isEmpty) {
@@ -246,6 +253,7 @@ class _NewRoomPageState extends ConsumerState<NewRoomPage> {
                                               .toList(),
                                           label: 'Kitchen Type',
                                           hintText: 'Select Kitchen Type',
+                                          value: provider.kitchingType,
                                           validator: (value) {
                                             if (value == null ||
                                                 value.isEmpty) {
@@ -280,9 +288,7 @@ class _NewRoomPageState extends ConsumerState<NewRoomPage> {
                                                           Checkbox(
                                                             checkColor:
                                                                 primaryColor,
-                                                            value: ref
-                                                                .watch(
-                                                                    newRoomProvider)
+                                                            value: provider
                                                                 .features
                                                                 .contains(e),
                                                             onChanged: (value) {
@@ -323,9 +329,7 @@ class _NewRoomPageState extends ConsumerState<NewRoomPage> {
                                                           Checkbox(
                                                               checkColor:
                                                                   primaryColor,
-                                                              value: ref
-                                                                  .watch(
-                                                                      newRoomProvider)
+                                                              value: provider
                                                                   .rules
                                                                   .contains(e),
                                                               onChanged:
@@ -371,14 +375,52 @@ class _NewRoomPageState extends ConsumerState<NewRoomPage> {
                                   subtitle: ref
                                           .watch(roomImagesProvider)
                                           .isEmpty
-                                      ? const SizedBox()
+                                      ? provider.images.isEmpty
+                                          ? const SizedBox()
+                                          : SizedBox(
+                                              height: 140,
+                                              child: ListView.builder(
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  itemCount:
+                                                      provider.images.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    var image =
+                                                        provider.images[index];
+                                                    return Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              right: 10),
+                                                      child: SizedBox(
+                                                        height: 130,
+                                                        width: 100,
+                                                        child: Column(
+                                                          children: [
+                                                            Container(
+                                                              width: 100,
+                                                              height: 100,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                image: DecorationImage(
+                                                                    image: NetworkImage(
+                                                                        image),
+                                                                    fit: BoxFit
+                                                                        .cover),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }),
+                                            )
                                       : SizedBox(
                                           height: 140,
                                           child: ListView.builder(
                                               scrollDirection: Axis.horizontal,
                                               itemCount: images.length,
                                               itemBuilder: (context, index) {
-                                               
                                                 var image = images[index];
                                                 return Padding(
                                                   padding:
@@ -427,7 +469,7 @@ class _NewRoomPageState extends ConsumerState<NewRoomPage> {
                                 ),
                                 const SizedBox(height: 22),
                                 CustomButton(
-                                  text: 'Save Room',
+                                  text: 'Update Room',
                                   radius: 10,
                                   color: primaryColor,
                                   onPressed: () {
@@ -435,8 +477,9 @@ class _NewRoomPageState extends ConsumerState<NewRoomPage> {
                                       _formKey.currentState!.save();
                                       //save room
                                       ref
-                                          .read(newRoomProvider.notifier)
-                                          .saveRoom(ref: ref, context: context);
+                                          .read(editRoomProvider.notifier)
+                                          .updateRoom(
+                                              ref: ref, context: context);
                                     }
                                   },
                                 )
@@ -453,6 +496,7 @@ class _NewRoomPageState extends ConsumerState<NewRoomPage> {
           ),
         ));
   }
+
   void _pickImage() async {
     var image = await ImagePicker().pickMultiImage(limit: 4);
     if (image.isNotEmpty) {

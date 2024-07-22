@@ -28,7 +28,7 @@ class _InstitutionsPageState extends ConsumerState<InstitutionsPage> {
         mobile: 14,
         tablet: 14);
     var rowStyles = styles.body(desktop: 13, mobile: 12, tablet: 12);
-    var dataStream = ref.watch(instituionStream);
+var items = ref.watch(institutionsProvider).filteredItems;
     return Container(
         color: Colors.white,
         width: double.infinity,
@@ -107,10 +107,9 @@ class _InstitutionsPageState extends ConsumerState<InstitutionsPage> {
             const SizedBox(height: 10),
             if (ref.watch(isNew)) buildNewForm(),
             Expanded(
-                child: dataStream.when(
-                    data: (data) {
-                      var items = ref.watch(institutionsProvider).filteredItems;
-                      return DataTable2(
+                child:
+                      
+                       DataTable2(
                           columnSpacing: 20,
                           horizontalMargin: 12,
                           empty: Center(
@@ -335,14 +334,8 @@ class _InstitutionsPageState extends ConsumerState<InstitutionsPage> {
                                 ],
                               );
                             }
-                          }).toList());
-                    },
-                    loading: () => const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                    error: (error, stack) => Center(
-                          child: Text('Error: $error'),
-                        ))),
+                          }).toList())
+                   ),
           ],
         ));
   }

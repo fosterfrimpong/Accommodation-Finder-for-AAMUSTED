@@ -229,19 +229,35 @@ class _HostelPageState extends ConsumerState<HostelPage> {
                   DataCell(
                     Row(
                       children: [
-                        IconButton(
-                          icon: const Icon(Icons.visibility),
-                          onPressed: () {},
-                        ),
+                        // IconButton(
+                        //   icon: const Icon(Icons.visibility),
+                        //   onPressed: () {},
+                        // ),
                         if (user.id == hostelList[index].managerId)
                           IconButton(
                             icon: const Icon(Icons.edit),
-                            onPressed: () {},
+                            onPressed: () {
+                               Navigator.of(context).push(TransparentRoute(
+                                  builder: (BuildContext context) =>
+                                      const NewHostel()));
+                            },
                           ),
                         if (user.id == hostelList[index].managerId)
                           IconButton(
                             icon: const Icon(Icons.delete),
-                            onPressed: () {},
+                            onPressed: () {
+                              CustomDialogs.showDialog(
+                                message:
+                                    'Are you sure you want to delete this hostel?',
+                                secondBtnText: 'Delete',
+                                type: DialogType.warning,
+                                onConfirm: () {
+                                  ref
+                                      .read(hostelsFilterProvider.notifier)
+                                      .deleteHostel(hostelList[index],ref);
+                                },
+                              );
+                            },
                           ),
                         if (user.role == 'admin')
                           if (hostelList[index].status == 'opened')

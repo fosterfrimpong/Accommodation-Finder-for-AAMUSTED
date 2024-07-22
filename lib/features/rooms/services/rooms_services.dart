@@ -2,6 +2,8 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:unidwell_finder/features/rooms/data/rooms_model.dart';
 
 class RoomsServices {
@@ -52,14 +54,23 @@ class RoomsServices {
     try {
       List<String> imageUrls = [];
       for (var i = 0; i < images.length; i++) {
-        var ref = _storage.ref('rooms/$id/$i.jpg');
-        await ref.putData(images[i]);
+        var ref = _storage.ref('rooms/$id/image$i.jpeg');
+        await ref.putData(images[i], SettableMetadata(contentType: 'image/jpeg'));
         var url = await ref.getDownloadURL();
         imageUrls.add(url);
       }
       return imageUrls;
     } catch (e) {
       return [];
+    }
+  }
+
+  static Future<bool>deleteRoom(String id) async{
+    try {
+      await _rooms.doc(id).delete();
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 }

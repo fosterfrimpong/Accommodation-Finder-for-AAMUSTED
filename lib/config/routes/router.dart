@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:unidwell_finder/config/routes/router_item.dart';
 import 'package:unidwell_finder/features/auth/views/login_page.dart';
 import 'package:unidwell_finder/features/auth/views/registration.dart';
+import 'package:unidwell_finder/features/bookings/views/admin_booking_page.dart';
 import 'package:unidwell_finder/features/dashboard/views/dashbaord_page.dart';
 import 'package:unidwell_finder/features/hostels/views/hostel_page.dart';
 import 'package:unidwell_finder/features/profile/views/profile_page.dart';
@@ -78,7 +79,7 @@ class MyRouter {
                 },
                 redirect: (context, state) {
                   var userInfo = ref.watch(userProvider);
-                  
+
                   if (userInfo.id.isEmpty) {
                     return RouterItem.loginRoute.path;
                   }
@@ -127,6 +128,11 @@ class MyRouter {
                       name: RouterItem.roomsRoute.name,
                       builder: (context, state) {
                         return const RoomsPage();
+                      }),
+                  GoRoute(
+                      path: RouterItem.bookingsRoute.path,
+                      builder: (context, state) {
+                        return const AdminBookingPage();
                       }),
                 ])
           ]);

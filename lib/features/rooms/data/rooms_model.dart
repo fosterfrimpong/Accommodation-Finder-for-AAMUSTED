@@ -1,6 +1,8 @@
 import 'dart:convert';
+
 import 'package:faker/faker.dart';
 import 'package:flutter/foundation.dart';
+
 import 'package:unidwell_finder/core/constatnts/options_list.dart';
 
 class RoomsModel {
@@ -26,30 +28,34 @@ class RoomsModel {
   String roomType;
   int availableSpace;
   String institution;
+  double? lat;
+  double? lng;
   int? createdAt;
   RoomsModel({
     required this.id,
-     this.title='',
-     this.description = '',
-     this.hostelId = '',
-     this.hostelName = '',
-     this.managerId = '',
-     this.managerName = '',
-     this.managerPhone = '',
-     this.managerEmail = '',
+    this.title = '',
+    this.description = '',
+    this.hostelId = '',
+    this.hostelName = '',
+    this.managerId = '',
+    this.managerName = '',
+    this.managerPhone = '',
+    this.managerEmail = '',
     this.status = 'available',
-     this.price = 0,
-     this.additionalCost = 0,
-     this.capacity = 0,
-     this.images = const [],
-     this.bathroomType = '',
-     this.kitchingType = '',
-     this.bedType = '',
+    this.price = 0,
+    this.additionalCost = 0,
+    this.capacity = 0,
+    this.images = const [],
+    this.bathroomType = '',
+    this.kitchingType = '',
+    this.bedType = '',
     this.features = const [],
     this.rules = const [],
-     this.roomType = '',
-     this.availableSpace = 0,
-     this.institution = '',
+    this.roomType = '',
+    this.availableSpace = 0,
+    this.institution = '',
+    this.lat,
+    this.lng,
     this.createdAt,
   });
 
@@ -76,6 +82,8 @@ class RoomsModel {
     String? roomType,
     int? availableSpace,
     String? institution,
+    ValueGetter<double?>? lat,
+    ValueGetter<double?>? lng,
     ValueGetter<int?>? createdAt,
   }) {
     return RoomsModel(
@@ -101,6 +109,8 @@ class RoomsModel {
       roomType: roomType ?? this.roomType,
       availableSpace: availableSpace ?? this.availableSpace,
       institution: institution ?? this.institution,
+      lat: lat != null ? lat() : this.lat,
+      lng: lng != null ? lng() : this.lng,
       createdAt: createdAt != null ? createdAt() : this.createdAt,
     );
   }
@@ -129,6 +139,8 @@ class RoomsModel {
       'roomType': roomType,
       'availableSpace': availableSpace,
       'institution': institution,
+      'lat': lat,
+      'lng': lng,
       'createdAt': createdAt,
     };
   }
@@ -157,6 +169,8 @@ class RoomsModel {
       roomType: map['roomType'] ?? '',
       availableSpace: map['availableSpace']?.toInt() ?? 0,
       institution: map['institution'] ?? '',
+      lat: map['lat']?.toDouble(),
+      lng: map['lng']?.toDouble(),
       createdAt: map['createdAt']?.toInt(),
     );
   }
@@ -168,62 +182,68 @@ class RoomsModel {
 
   @override
   String toString() {
-    return 'RoomsModel(id: $id, title: $title, description: $description, hostelId: $hostelId, hostelName: $hostelName, managerId: $managerId, managerName: $managerName, managerPhone: $managerPhone, managerEmail: $managerEmail, status: $status, price: $price, additionalCost: $additionalCost, capacity: $capacity, images: $images, bathroomType: $bathroomType, kitchingType: $kitchingType, bedType: $bedType, features: $features, rules: $rules, roomType: $roomType, availableSpace: $availableSpace, createdAt: $createdAt)';
+    return 'RoomsModel(id: $id, title: $title, description: $description, hostelId: $hostelId, hostelName: $hostelName, managerId: $managerId, managerName: $managerName, managerPhone: $managerPhone, managerEmail: $managerEmail, status: $status, price: $price, additionalCost: $additionalCost, capacity: $capacity, images: $images, bathroomType: $bathroomType, kitchingType: $kitchingType, bedType: $bedType, features: $features, rules: $rules, roomType: $roomType, availableSpace: $availableSpace, institution: $institution, lat: $lat, lng: $lng, createdAt: $createdAt)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-
+  
     return other is RoomsModel &&
-        other.id == id &&
-        other.title == title &&
-        other.description == description &&
-        other.hostelId == hostelId &&
-        other.hostelName == hostelName &&
-        other.managerId == managerId &&
-        other.managerName == managerName &&
-        other.managerPhone == managerPhone &&
-        other.managerEmail == managerEmail &&
-        other.status == status &&
-        other.price == price &&
-        other.additionalCost == additionalCost &&
-        other.capacity == capacity &&
-        listEquals(other.images, images) &&
-        other.bathroomType == bathroomType &&
-        other.kitchingType == kitchingType &&
-        other.bedType == bedType &&
-        listEquals(other.features, features) &&
-        listEquals(other.rules, rules) &&
-        other.roomType == roomType &&
-        other.availableSpace == availableSpace &&
-        other.createdAt == createdAt;
+      other.id == id &&
+      other.title == title &&
+      other.description == description &&
+      other.hostelId == hostelId &&
+      other.hostelName == hostelName &&
+      other.managerId == managerId &&
+      other.managerName == managerName &&
+      other.managerPhone == managerPhone &&
+      other.managerEmail == managerEmail &&
+      other.status == status &&
+      other.price == price &&
+      other.additionalCost == additionalCost &&
+      other.capacity == capacity &&
+      listEquals(other.images, images) &&
+      other.bathroomType == bathroomType &&
+      other.kitchingType == kitchingType &&
+      other.bedType == bedType &&
+      listEquals(other.features, features) &&
+      listEquals(other.rules, rules) &&
+      other.roomType == roomType &&
+      other.availableSpace == availableSpace &&
+      other.institution == institution &&
+      other.lat == lat &&
+      other.lng == lng &&
+      other.createdAt == createdAt;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-        title.hashCode ^
-        description.hashCode ^
-        hostelId.hashCode ^
-        hostelName.hashCode ^
-        managerId.hashCode ^
-        managerName.hashCode ^
-        managerPhone.hashCode ^
-        managerEmail.hashCode ^
-        status.hashCode ^
-        price.hashCode ^
-        additionalCost.hashCode ^
-        capacity.hashCode ^
-        images.hashCode ^
-        bathroomType.hashCode ^
-        kitchingType.hashCode ^
-        bedType.hashCode ^
-        features.hashCode ^
-        rules.hashCode ^
-        roomType.hashCode ^
-        availableSpace.hashCode ^
-        createdAt.hashCode;
+      title.hashCode ^
+      description.hashCode ^
+      hostelId.hashCode ^
+      hostelName.hashCode ^
+      managerId.hashCode ^
+      managerName.hashCode ^
+      managerPhone.hashCode ^
+      managerEmail.hashCode ^
+      status.hashCode ^
+      price.hashCode ^
+      additionalCost.hashCode ^
+      capacity.hashCode ^
+      images.hashCode ^
+      bathroomType.hashCode ^
+      kitchingType.hashCode ^
+      bedType.hashCode ^
+      features.hashCode ^
+      rules.hashCode ^
+      roomType.hashCode ^
+      availableSpace.hashCode ^
+      institution.hashCode ^
+      lat.hashCode ^
+      lng.hashCode ^
+      createdAt.hashCode;
   }
 
   static List<RoomsModel> getDummy() {

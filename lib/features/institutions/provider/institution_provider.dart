@@ -5,14 +5,7 @@ import 'package:unidwell_finder/features/institutions/services/institution_servi
 
 import '../data/institution_filter_model.dart';
 
-final instituionStream =
-    StreamProvider.autoDispose<List<InstitutionsModel>>((ref) async* {
-  var institutions = InstitutionServices.getInstitutions();
-  await for (var institution in institutions) {
-    ref.read(institutionsProvider.notifier).setItems(institution);
-    yield institution;
-  }
-});
+
 
 final institutionsProvider =
     StateNotifierProvider<InstitutionProvider, InstitutionFilterModel>((ref) {

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:unidwell_finder/features/hostels/data/hostels_model.dart';
@@ -61,5 +63,21 @@ class HostelServices {
       return null;
     }
     
+  }
+
+  static Future<List<String>> uploadImages(List<Uint8List> images, String id)async {
+    try {
+      List<String> imageUrls = [];
+      for (var i = 0; i < images.length; i++) {
+        var ref = _storage.ref().child('hostels/$id/$i.jpeg');
+        await ref.putData(images[i], SettableMetadata(contentType: 'image/jpeg'));
+        var url = await ref.getDownloadURL();
+        imageUrls.add(url);
+      }
+      return imageUrls;
+      
+    } catch (e) {
+      return [];
+    }
   }
 }
