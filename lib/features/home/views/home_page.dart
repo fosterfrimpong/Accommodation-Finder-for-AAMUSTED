@@ -1,14 +1,6 @@
-import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:unidwell_finder/features/auth/services/registration_services.dart';
-import 'package:unidwell_finder/features/hostels/data/hostels_model.dart';
-import 'package:unidwell_finder/features/hostels/services/hostel_services.dart';
-import 'package:unidwell_finder/features/rooms/services/rooms_services.dart';
-import 'package:unidwell_finder/rating/data/rating.dart';
 import '../../../core/views/footer_page.dart';
-import '../../../rating/services/rating_services.dart';
-import '../../rooms/data/rooms_model.dart';
 import '../pages/landing_page.dart';
 import '../pages/rooms_listening.dart';
 

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 
 
@@ -17,8 +16,8 @@ class BookingModel {
   String? status;
   String? startDate;
   String? endDate;
-  bool? managerSigned;
-  bool? studentSigned;
+  bool managerSigned;
+  bool studentSigned;
   String? hostelId;
   String? hostelName;
   String? roomId;
@@ -51,8 +50,8 @@ class BookingModel {
     this.status,
     this.startDate,
     this.endDate,
-    this.managerSigned,
-    this.studentSigned,
+    this.managerSigned=false,
+    this.studentSigned=false,
     this.hostelId,
     this.hostelName,
     this.roomId,
@@ -87,8 +86,8 @@ class BookingModel {
     ValueGetter<String?>? status,
     ValueGetter<String?>? startDate,
     ValueGetter<String?>? endDate,
-    ValueGetter<bool?>? managerSigned,
-    ValueGetter<bool?>? studentSigned,
+    bool? managerSigned,
+    bool? studentSigned,
     ValueGetter<String?>? hostelId,
     ValueGetter<String?>? hostelName,
     ValueGetter<String?>? roomId,
@@ -122,8 +121,8 @@ class BookingModel {
       status: status != null ? status() : this.status,
       startDate: startDate != null ? startDate() : this.startDate,
       endDate: endDate != null ? endDate() : this.endDate,
-      managerSigned: managerSigned != null ? managerSigned() : this.managerSigned,
-      studentSigned: studentSigned != null ? studentSigned() : this.studentSigned,
+      managerSigned: managerSigned ?? this.managerSigned,
+      studentSigned: studentSigned ?? this.studentSigned,
       hostelId: hostelId != null ? hostelId() : this.hostelId,
       hostelName: hostelName != null ? hostelName() : this.hostelName,
       roomId: roomId != null ? roomId() : this.roomId,
@@ -198,8 +197,8 @@ class BookingModel {
       status: map['status'],
       startDate: map['startDate'],
       endDate: map['endDate'],
-      managerSigned: map['managerSigned'],
-      studentSigned: map['studentSigned'],
+      managerSigned: map['managerSigned'] ?? false,
+      studentSigned: map['studentSigned'] ?? false,
       hostelId: map['hostelId'],
       hostelName: map['hostelName'],
       roomId: map['roomId'],

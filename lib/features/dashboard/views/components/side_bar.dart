@@ -151,21 +151,7 @@ class SideBar extends ConsumerWidget {
             },
           ),
         ),
-        //complaints
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2),
-          child: SideBarItem(
-            title: 'Complaints',
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-            icon: Icons.list_alt,
-            isActive:
-                ref.watch(routerProvider) == RouterItem.complaintsRoute.name,
-            onTap: () {
-              MyRouter(context: context, ref: ref)
-                  .navigateToRoute(RouterItem.complaintsRoute);
-            },
-          ),
-        ),
+        
       ],
     );
   }
@@ -187,33 +173,8 @@ class SideBar extends ConsumerWidget {
             },
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2),
-          child: SideBarItem(
-            title: 'Complaints',
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-            icon: Icons.list_alt,
-            isActive:
-                ref.watch(routerProvider) == RouterItem.complaintsRoute.name,
-            onTap: () {
-              MyRouter(context: context, ref: ref)
-                  .navigateToRoute(RouterItem.complaintsRoute);
-            },
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2),
-          child: SideBarItem(
-            title: 'Profile',
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-            icon: Icons.person,
-            isActive: ref.watch(routerProvider) == RouterItem.profileRoute.name,
-            onTap: () {
-              MyRouter(context: context, ref: ref)
-                  .navigateToRoute(RouterItem.profileRoute);
-            },
-          ),
-        ),
+        
+       
       ],
     );
   }
@@ -271,33 +232,7 @@ class SideBar extends ConsumerWidget {
             },
           ),
         ),
-         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2),
-          child: SideBarItem(
-            title: 'Complaints',
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-            icon: Icons.list_alt,
-            isActive:
-                ref.watch(routerProvider) == RouterItem.complaintsRoute.name,
-            onTap: () {
-              MyRouter(context: context, ref: ref)
-                  .navigateToRoute(RouterItem.complaintsRoute);
-            },
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2),
-          child: SideBarItem(
-            title: 'Profile',
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-            icon: Icons.person,
-            isActive: ref.watch(routerProvider) == RouterItem.profileRoute.name,
-            onTap: () {
-              MyRouter(context: context, ref: ref)
-                  .navigateToRoute(RouterItem.profileRoute);
-            },
-          ),
-        ),
+      
       ],
     );
   }

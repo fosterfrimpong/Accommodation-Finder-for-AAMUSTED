@@ -10,7 +10,14 @@ class BookingServices{
 
   }
 
-  static updateBooking(String? id, Map<String, String> map) {}
+  static Future<bool> updateBooking(String id, Map<String, dynamic> map)async {
+    try{
+      await _bookings.doc(id).update(map);
+      return true;
+    }catch(e){
+      return false;
+    }
+  }
 
   static String getId() {
     return _bookings.doc().id;

@@ -316,7 +316,7 @@ class BookingsFilterProvider extends StateNotifier<BookingsFilter> {
     CustomDialogs.dismiss();
     CustomDialogs.loading(message: 'Cancelling Booking');
     var data = await BookingServices.updateBooking(
-        booking.id, {'status': 'cancelled'});
+        booking.id!, {'status': 'cancelled'});
 
     if (data) {
       //send notification to patient
@@ -349,7 +349,7 @@ class BookingsFilterProvider extends StateNotifier<BookingsFilter> {
     CustomDialogs.dismiss();
     CustomDialogs.loading(message: 'Accepting Booking');
     var data =
-        await BookingServices.updateBooking(booking.id, {'status': 'accepted'});
+        await BookingServices.updateBooking(booking.id!, {'status': 'accepted'});
 
     if (data) {
       var message =
@@ -369,6 +369,73 @@ class BookingsFilterProvider extends StateNotifier<BookingsFilter> {
       CustomDialogs.toast(
           message: 'Failed to Accept Booking', type: DialogType.error);
     }
+  }
+
+  void rejectBooking(String? id, UserModel user) async {
+    CustomDialogs.loading(message: 'Rejecting Booking');
+    var data = await BookingServices.updateBooking(id!, {'status': 'rejected'});
+    if (data) {
+      var booking = state.items.firstWhere((element) => element.id == id);
+      var message = 'Your Room booking at ${booking.hostelName} has been Rejected';
+      await SmsApi().sendMessage(booking.studentPhone!, message);
+      state = state.copyWith(
+          items: state.items
+              .map((e) => e.id == id
+                  ? booking.copyWith(status: () => 'rejected')
+                  : e)
+              .toList());
+      CustomDialogs.dismiss();
+      CustomDialogs.toast(
+          message: 'Booking Rejected', type: DialogType.success);
+    } else {
+      CustomDialogs.dismiss();
+      CustomDialogs.toast(
+          message: 'Failed to Reject Booking', type: DialogType.error);
+    }
+  }
+
+  void approveBooking(String? id, UserModel user) async {
+    CustomDialogs.loading(message: 'Approving Booking');
+
+    var data = await BookingServices.updateBooking(
+        id!,
+        user.role == 'manager'
+            ? {'managerSigned': true}
+            : {'studentSigned': true});
+    if (data) {
+      //check if both parties have signed the booking
+      var booking = state.items.firstWhere((element) => element.id == id);
+      booking.copyWith(
+        managerSigned: user.role == 'manager' ? true : booking.managerSigned,
+        studentSigned: user.role == 'student' ? true : booking.studentSigned,
+      );
+      if (booking.managerSigned && booking.studentSigned) {
+        await BookingServices.updateBooking(id, {'status': 'approved'});
+        var message = 'Your Room booking at ${booking.hostelName} has been Approved';
+        await SmsApi().sendMessage(booking.studentPhone!, message);
+      }
+      state = state.copyWith(
+          items: state.items
+              .map((e) => e.id == id
+                  ? booking.copyWith(
+                      managerSigned: user.role == 'manager'
+                          ? true
+                          : booking.managerSigned,
+                      studentSigned: user.role == 'student'
+                          ? true
+                          : booking.studentSigned)
+                  : e)
+              .toList());
+      CustomDialogs.dismiss();
+      CustomDialogs.toast(
+          message: 'Booking Approved Successfully',
+          type: DialogType.success);
+    }else{
+      CustomDialogs.dismiss();
+      CustomDialogs.toast(
+          message: 'Failed to Approve Booking', type: DialogType.error);
+    }
+
   }
 }
 

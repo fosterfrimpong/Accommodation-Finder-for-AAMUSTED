@@ -1,11 +1,11 @@
-import 'package:js/js.dart';
+// import 'package:js/js.dart';
 
-@JS()
-external paystackPopUp(
-  String pkTest,
-  String email,
-  int amount,
-  String ref,
-  void Function() onClosed,
-  void Function() callback,
-);
+// @JS('paystackPopUp')
+// external paystackPopUp(
+//   String pkTest,
+//   String email,
+//   int amount,
+//   String ref,
+//   void Function() onClosed,
+//   void Function() callback,
+// );

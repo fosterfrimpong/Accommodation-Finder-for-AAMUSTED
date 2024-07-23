@@ -15,7 +15,6 @@ class NavBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var styles = Styles(context);
-    print(ref.watch(userProvider).toMap());
     return Container(
       width: double.infinity,
       color: primaryColor,

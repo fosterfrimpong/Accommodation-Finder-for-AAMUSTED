@@ -39,7 +39,7 @@ dependencies:
   permission_handler: ^11.3.1
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  js: ^0.7.1
+  # js: ^0.7.1
   pay_with_paystack: ^1.0.10
   url_launcher: ^6.3.0
   geolocator: ^12.0.0
