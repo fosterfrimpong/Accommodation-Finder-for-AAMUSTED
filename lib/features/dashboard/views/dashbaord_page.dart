@@ -41,45 +41,46 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
               Wrap(
                 spacing: 10,
                 runSpacing: 10,
-                children:[
-                DashBoardItem(
-                  icon: Icons.people,
-                  title: 'Students'.toUpperCase(),
-                  itemCount: studentsList.items.length,
-                  color: Colors.blue,
-                  onTap: () {},
-                ),
-                if(user.role == 'admin')
-                DashBoardItem(
-                  icon: Icons.people_alt_outlined,
-                  title: 'Managers'.toUpperCase(),
-                  itemCount: managersList.items.length,
-                  color: Colors.green,
-                  onTap: () {},
-                ),
-                DashBoardItem(
-                  icon: Icons.hotel,
-                  title: 'Hostels'.toUpperCase(),
-                  itemCount: hostelList.items.length,
-                  color: Colors.orange,
-                  onTap: () {},
-                ),
-                DashBoardItem(
-                  icon: Icons.room,
-                  title: 'Rooms'.toUpperCase(),
-                  itemCount: roomsList.items.length,
-                  color: Colors.pink,
-                  onTap: () {},
-                ),
-                DashBoardItem(
-                  icon: Icons.report,
-                  title: 'Bookings'.toUpperCase(),
-                  itemCount: bookingsList.items.length,
-                  color: Colors.purple,
-                  onTap: () {},
-                ),
-              ],
+                children: [
+                  if (user.role == 'admin')
+                    DashBoardItem(
+                      icon: Icons.people,
+                      title: 'Students'.toUpperCase(),
+                      itemCount: studentsList.items.length,
+                      color: Colors.blue,
+                      onTap: () {},
+                    ),
+                  if (user.role == 'admin')
+                    DashBoardItem(
+                      icon: Icons.people_alt_outlined,
+                      title: 'Managers'.toUpperCase(),
+                      itemCount: managersList.items.length,
+                      color: Colors.green,
+                      onTap: () {},
+                    ),
+                  DashBoardItem(
+                    icon: Icons.hotel,
+                    title: 'Hostels'.toUpperCase(),
+                    itemCount: hostelList.items.length,
+                    color: Colors.orange,
+                    onTap: () {},
                   ),
+                  DashBoardItem(
+                    icon: Icons.room,
+                    title: 'Rooms'.toUpperCase(),
+                    itemCount: roomsList.items.length,
+                    color: Colors.pink,
+                    onTap: () {},
+                  ),
+                  DashBoardItem(
+                    icon: Icons.report,
+                    title: 'Bookings'.toUpperCase(),
+                    itemCount: bookingsList.items.length,
+                    color: Colors.purple,
+                    onTap: () {},
+                  ),
+                ],
+              ),
             ])));
   }
 }

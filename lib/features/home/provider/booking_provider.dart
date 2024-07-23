@@ -157,6 +157,8 @@ class BookingProvider extends StateNotifier<BookingItem?> {
           paymentChannel: ["mobile_money", "card"],
           amount: state!.totalCost,
           transactionCompleted: ()async {
+            //pop the payment page
+            Navigator.pop(context);
             CustomDialogs.loading(message: 'Processing payment...');
                 var hostelId = state!.room!.hostelId;
                 

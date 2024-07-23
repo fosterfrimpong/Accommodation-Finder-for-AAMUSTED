@@ -91,7 +91,7 @@ class _HostelPageState extends ConsumerState<HostelPage> {
               ),
             if ((styles.largerThanMobile ||
                     (styles.isMobile && !ref.watch(isSearchingHostel))) &&
-                user.role != 'manager')
+                user.role == 'manager')
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CustomButton(
