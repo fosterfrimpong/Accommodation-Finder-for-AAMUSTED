@@ -42,7 +42,7 @@ class _NewHostelState extends ConsumerState<NewHostel> {
                   : styles.isTablet
                       ? styles.width * 0.55
                       : styles.width * 0.45,
-              height: styles.height * .9,
+              height: styles.height * .8,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),

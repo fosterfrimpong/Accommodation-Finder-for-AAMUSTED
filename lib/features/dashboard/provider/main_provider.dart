@@ -277,11 +277,17 @@ final allBookingsProvider = StateProvider<List<BookingModel>>((ref) {
 final bookingFilterProvider = StateNotifierProvider.family<
     BookingsFilterProvider, BookingsFilter, String?>((ref, id) {
   var data = ref.watch(allBookingsProvider);
+  print('Data ====== ${data.length}');
+  for(var d in data){
+    print('Id============${d.managerId}');
+  }
+  print('My ID ==============$id');
   var user = ref.watch(userProvider);
   if (id != null && id.isNotEmpty) {
     var items = data
         .where((element) => element.studentId == id || element.managerId == id)
         .toList();
+    print('Data coming =========${items.length}');
     return BookingsFilterProvider()..setItems(items, user);
   }
   return BookingsFilterProvider()..setItems(data, user);

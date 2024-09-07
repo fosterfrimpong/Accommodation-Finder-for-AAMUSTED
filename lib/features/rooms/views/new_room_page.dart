@@ -40,7 +40,7 @@ class _NewRoomPageState extends ConsumerState<NewRoomPage> {
                     : styles.isTablet
                         ? styles.width * 0.55
                         : styles.width * 0.45,
-                height: styles.height*.9,
+                height: styles.height*.85,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),

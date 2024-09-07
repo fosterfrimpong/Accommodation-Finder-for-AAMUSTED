@@ -307,7 +307,7 @@ class _RoomsPageState extends ConsumerState<RoomsPage> {
               child: CustomButton(
                 color: secondaryColor,
                 radius: 10,
-                text: styles.isMobile ? '' : 'Add Hostel',
+                text: styles.isMobile ? '' : 'Add Room',
                 icon: const Icon(
                   Icons.add,
                   color: primaryColor,
@@ -349,9 +349,11 @@ class _RoomsPageState extends ConsumerState<RoomsPage> {
                 label: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(ref.watch(selectedHostelProvider).isEmpty
-                        ? 'Hotel Name'.toUpperCase()
-                        : ref.watch(selectedHostelProvider)),
+                    Expanded(
+                      child: Text(ref.watch(selectedHostelProvider).isEmpty
+                          ? 'Hotel Name'.toUpperCase()
+                          : ref.watch(selectedHostelProvider)),
+                    ),
                     const SizedBox(width: 10),
                     PopupMenuButton(
                         itemBuilder: (context) {

@@ -16,7 +16,7 @@ class _LandingPageState extends ConsumerState<LandingPage> {
   List<Map<String, String>> data = [
     {
       'image': Assets.imagesSlide1,
-      'title': 'Create an Accout',
+      'title': 'Create an Account',
       'description':
           'Create an account with us. You can create an account as a student or a landlord or a hostel manager. You can also create an account for someone else. You will be able to manage your account and view your profile. You can also update your profile at any time.'
     },
@@ -62,13 +62,13 @@ class _LandingPageState extends ConsumerState<LandingPage> {
               child: Container(
                   width: styles.width,
                   alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  height: styles.height * 0.6,
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  height: styles.height * 0.5,
                   color: Colors.black.withOpacity(0.1),
                   child: SizedBox(
                     width: styles.isMobile
                         ? styles.width * 0.8
-                        : styles.width * 0.4,
+                        : styles.width * 0.6,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -81,7 +81,7 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                               desktop: 60,
                               fontWeight: FontWeight.bold),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 10),
                         Text(
                           i['description']!,
                           style: styles.body(
